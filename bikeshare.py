@@ -223,21 +223,63 @@ def user_stats(df):
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
 
+def data_explorer(df):
+    """Allows the user to see the data in the dataframe."""
+    
+    #We make sure that the value of view_data is 'yes' or 'no'
+    while True:
+        view_data = input('\nWould you like to view 5 rows of individual trip data? Enter yes or no\n')
+        try:
+            if str(view_data) == 'yes':
+                print(view_data)
+            elif str(view_data) == 'no':
+                print(view_data)
+            else :
+                raise ValueError
+        except ValueError:
+            print("\n" + view_data + " is not a valid, try again.")
+        else:
+            break
+            
+    #In this loop we confirm if the user wants to continue looking at the raw data using 'yes' or 'no'
+    start_loc = 0
+    while ('yes' == view_data):
+        print(df.iloc[start_loc:start_loc+5])
+        start_loc += 5
+        while True:
+            view_data = input('\nDo you wish to continue?: yes/no \n')
+            try:
+                if str(view_data) == 'yes':
+                    print(view_data)
+                elif str(view_data) == 'no':
+                    print(view_data)
+                else :
+                    raise ValueError
+            except ValueError:
+                print("\n" + view_data + " is not a valid, try again. \n")
+            else:
+                break
 
 def main():
     while True:
         city, month, day = get_filters()
         df = load_data(city, month, day)
 
-        time_stats(df)
-        station_stats(df)
-        trip_duration_stats(df)
-        user_stats(df)
-
-        restart = input('\nWould you like to restart? Enter yes or no.\n')
-        if restart.lower() != 'yes':
+        #after choosing city, month and day we have a menu with several options allowing the user to decide what he wants to next
+        option = input('\nPlease enter a number to choose what would you like to do.\n 1. Show the summary statistics\n 2. See data\n 3. Restarting\n 4. Exit\n')
+        if int(option) == 1:
+            time_stats(df)
+            station_stats(df)
+            trip_duration_stats(df)
+            #Washington is skipt because there are not washington Gender and Birth Year columns
+            if city != 'washington':
+                user_stats(df)
+        elif int(option) == 2:
+            data_explorer(df)
+        elif int(option) == 3:
+            print('Restaring')    
+        elif int(option) == 4:
             break
-
 
 if __name__ == "__main__":
 	main()
